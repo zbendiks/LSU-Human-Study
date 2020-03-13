@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# A simple loop to serially profile the .BAM files from each metagenome sample against the co-assembly from MEGAHIT WITHOUT SNV PROFILING (dramatically improves runtime)
+
+for sample in `ls /home/marcolabuser/Zach/LSU_Metagenomics/bowtie_index/*.bam`
+
+do
+
+    dir="/home/marcolabuser/Zach/LSU_Metagenomics/bowtie_index"
+    base=$(basename $sample ".bam")
+
+    #use echo command to make sure the right files are being used 
+    echo "anvi-profile -i ${base}.bam -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db --sample-name ${base} --output-dir ${dir}/${base}_profile_newprofiler/ --num-threads 24 -S ${base} --skip-SNV-profiling"
+    
+    #run anvi'o profiling for every sample .BAM against the contigs database, output in own folders. Script automatically ignores contigs <1000 bp by default 
+    anvi-profile -i ${base}.bam -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db --sample-name ${base} --output-dir ${dir}/${base}_profile_newprofiler/ --num-threads 24 -S ${base} --skip-SNV-profiling
+    
+done
