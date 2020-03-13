@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# A simple loop to serially map all samples against the bowtie2 indices.
+
+# how many threads should each mapping task use?
+NUM_THREADS=24
+
+for sample in `ls /home/marcolabuser/Zach/LSU_Metagenomics/*_forward_paired_control.fq.gz`
+do
+    dir="/home/marcolabuser/Zach/LSU_Metagenomics"
+    base=$(basename $sample "_forward_paired_control.fq.gz")
+    #use echo command to make sure the right files are being used 
+    echo "bowtie2 --threads $NUM_THREADS -x /home/marcolabuser/Zach/LSU_Metagenomics/bowtie_index/contigs/contigs -1 ${dir}/${base}_forward_paired_control.fq.gz -2 ${dir}/${base}_reverse_paired_control.fq.gz --no-unal -S ${dir}/bowtie_index/${base}.sam --sensitive 2>${dir}/bowtie_index/${base}_alignment.log"
+    #perform bowtie2 alignment in sensitive mode, write STDERR to logfile 
+    bowtie2 --threads $NUM_THREADS -x /home/marcolabuser/Zach/LSU_Metagenomics/bowtie_index/contigs/contigs -1 ${dir}/${base}_forward_paired_control.fq.gz -2 ${dir}/${base}_reverse_paired_control.fq.gz --no-unal -S ${dir}/bowtie_index/${base}.sam --sensitive 2>${dir}/bowtie_index/${base}_alignment.log
+    #generate and format BAM file from SAM file  
+    samtools view -F 4 -bS ${dir}/bowtie_index/${base}.sam > ${dir}/bowtie_index/${base}-RAW.bam
+
+    anvi-init-bam ${dir}/bowtie_index/${base}-RAW.bam -o ${dir}/bowtie_index/${base}.bam
+    #delete unnecessary files 
+    rm ${dir}/bowtie_index/${base}.sam ${dir}/bowtie_index/${base}-RAW.bam
+
+done
