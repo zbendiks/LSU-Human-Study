@@ -10,9 +10,23 @@ do
     base=$(basename $sample ".bam")
 
     #use echo command to make sure the right files are being used 
-    echo "anvi-profile -i ${base}.bam -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db --sample-name ${base} --output-dir ${dir}/${base}_profile_newprofiler/ --num-threads 24 -S ${base} --skip-SNV-profiling"
+    echo "anvi-profile \
+    -i ${base}.bam \
+    -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db \
+    --sample-name ${base} \
+    --output-dir ${dir}/${base}_profile_newprofiler/ \
+    --num-threads 24 \
+    -S ${base} \
+    --skip-SNV-profiling"
     
     #run anvi'o profiling for every sample .BAM against the contigs database, output in own folders. Script automatically ignores contigs <1000 bp by default 
-    anvi-profile -i ${base}.bam -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db --sample-name ${base} --output-dir ${dir}/${base}_profile_newprofiler/ --num-threads 24 -S ${base} --skip-SNV-profiling
+    anvi-profile \
+    -i ${base}.bam \
+    -c /home/marcolabuser/Zach/LSU_Metagenomics/anvio_filtered_contigs/final.contigs-fixed.db \
+    --sample-name ${base} \
+    --output-dir ${dir}/${base}_profile_newprofiler/ \
+    --num-threads 24 \
+    -S ${base} \
+    --skip-SNV-profiling    
     
 done
